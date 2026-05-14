@@ -1,0 +1,89 @@
+# Blender MTL File: 'pilot_only.blend'
+# Material Count: 6
+
+newmtl TECI_helmet
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Bump E:\\blender\\tk_cc\\textures\\teci_helmet_low_TECI_helmet_Normal.png
+map_Ka E:\\blender\\tk_cc\\textures\\teci_helmet_AO.png
+map_Kd E:\\blender\\tk_cc\\textures\\teci_helmet_low_TECI_helmet_BaseColor.png
+map_Ke E:\\blender\\tk_cc\\textures\\teci_helmet_Emissive_alt.png
+map_Ks E:\\blender\\tk_cc\\textures\\teci_helmet_METAL.png
+map_Ns E:\\blender\\tk_cc\\textures\\teci_helmet_ROUGH.png
+
+newmtl arm
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Bump E:\\blender\\tk_cc\\textures\\arms\\concept_arms_low_arm_Normal.png
+map_Ka E:\\blender\\tk_cc\\textures\\arms\\concept_arms_low_arm_AO.png
+map_Kd E:\\blender\\tk_cc\\textures\\arms\\concept_arms_low_arm_BaseColor.png
+map_Ks E:\\blender\\tk_cc\\textures\\arms\\concept_arms_low_arm_METAL.png
+map_Ns E:\\blender\\tk_cc\\textures\\arms\\concept_arms_low_arm_ROUGH.png
+
+newmtl gear
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Bump E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_gear_Normal.png
+map_Ka E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_gear_AO.png
+map_Kd E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_gear_BaseColor.png
+map_Ks E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_gear_METAL.png
+map_Ns E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_gear_ROUGH.png
+
+newmtl jumpjet
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Bump E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_jumpjet_Normal.png
+map_Ka E:\\blender\\tk_cc\\textures\\jumpkit\\tecibody_low_jumpjet_AO.png
+map_Kd E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_jumpjet_BaseColor.png
+map_Ke E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_jumpjet_Emissive.tga
+map_Ks E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_jumpjet_METAL.png
+map_Ns E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_jumpjet_ROUGH.png
+
+newmtl pants
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Bump E:\\blender\\tk_cc\\textures\\pants\\tecipants_low_pants_Normal.png
+map_Ka E:\\blender\\tk_cc\\textures\\pants\\tecipants_low_pants_AO.png
+map_Kd E:\\blender\\tk_cc\\textures\\pants\\tecipants_low_pants_BaseColor.png
+map_Ks E:\\blender\\tk_cc\\textures\\pants\\tecipants_low_pants_METAL.png
+map_Ns E:\\blender\\tk_cc\\textures\\pants\\tecipants_low_pants_ROUGH.png
+
+newmtl torso
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd D:\blender\tk_cc\textures\torso_all\teci_torso_UVM.png
+map_Bump E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_torso_Normal.png
+map_Ka E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_torso_AO.png
+map_Ke E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_torso_Emissive.tga
+map_Ks E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_torso_METAL.png
+map_Ns E:\\blender\\tk_cc\\textures\\torso_all\\tecibody_low_torso_ROUGH.png
