@@ -1,2 +1,3 @@
-2026/05/16-11:14:29.771 f70 Creating DB C:\Users\3y1la\OneDrive\Desktop\PROTOCOLO ATLAS - HIGH CONCEPT\High-Concept-Protocolo-ATLAS---Unreal-Engine\ProtocoloATLAS\Saved\webcache_6613_1\Default\Sync Data\LevelDB since it was missing.
-2026/05/16-11:14:29.782 f70 Reusing MANIFEST C:\Users\3y1la\OneDrive\Desktop\PROTOCOLO ATLAS - HIGH CONCEPT\High-Concept-Protocolo-ATLAS---Unreal-Engine\ProtocoloATLAS\Saved\webcache_6613_1\Default\Sync Data\LevelDB/MANIFEST-000001
+2026/05/16-11:36:28.012 2c04 Reusing MANIFEST C:\Users\3y1la\OneDrive\Desktop\PROTOCOLO ATLAS - HIGH CONCEPT\High-Concept-Protocolo-ATLAS---Unreal-Engine\ProtocoloATLAS\Saved\webcache_6613_1\Default\Sync Data\LevelDB/MANIFEST-000001
+2026/05/16-11:36:28.014 2c04 Recovering log #3
+2026/05/16-11:36:28.014 2c04 Reusing old log C:\Users\3y1la\OneDrive\Desktop\PROTOCOLO ATLAS - HIGH CONCEPT\High-Concept-Protocolo-ATLAS---Unreal-Engine\ProtocoloATLAS\Saved\webcache_6613_1\Default\Sync Data\LevelDB/000003.log 
