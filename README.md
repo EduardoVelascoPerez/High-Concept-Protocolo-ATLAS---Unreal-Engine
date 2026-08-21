@@ -12,3 +12,7 @@ O fluxo seguro para Codex e Claude Code trabalharem ao mesmo tempo usa branches,
 `git worktree` e reservas de ativos binários. Consulte
 [`docs/PARALLEL_WORKFLOW.md`](docs/PARALLEL_WORKFLOW.md) antes de iniciar uma
 tarefa.
+
+As atribuições autorizadas e seus critérios de aceite ficam em
+[`docs/agents/TASKS.md`](docs/agents/TASKS.md). O `CLAUDE.md` importa essa fila
+automaticamente quando o Claude Code é iniciado na raiz do worktree.

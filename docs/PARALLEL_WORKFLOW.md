@@ -14,6 +14,11 @@ main (somente integração)
 
 ## Preparar uma tarefa
 
+Antes de criar a branch, registre a atribuição completa em
+`docs/agents/TASKS.md`. Esse arquivo define quem pode agir, em qual branch, com
+qual escopo e quais critérios de aceite. O Claude Code o recebe automaticamente
+por meio dos imports do `CLAUDE.md`.
+
 A partir da raiz deste repositório:
 
 ```bash
@@ -32,6 +37,10 @@ Inicie o Claude no diretório indicado pelo comando:
 cd .worktrees/claude-<tarefa>
 claude
 ```
+
+Na primeira mensagem, basta dizer `execute a tarefa ativa desta branch`. O
+Claude deve localizar a atribuição exata em `docs/agents/TASKS.md`; se não
+encontrar uma tarefa `PRONTA` ou `EM_ANDAMENTO`, ele deve parar.
 
 O executável `claude` precisa estar instalado e autenticado na máquina; o
 repositório não instala ferramentas globais.
@@ -67,12 +76,13 @@ cada agente continua responsável por obedecê-la.
 
 ## Ciclo de integração
 
-1. Atualize `origin/main` e crie worktrees novos.
-2. Defina uma tarefa e um critério de aceite por branch.
-3. Reserve os ativos binários antes de abrir o editor.
-4. Faça commits pequenos e valide o fluxo dentro do worktree da tarefa.
-5. Libere a reserva e entregue branch, commits, arquivos e evidências.
-6. Integre uma branch por vez via PR. Após cada merge, atualize a segunda
+1. Atualize `origin/main`.
+2. Registre responsável, branch, escopo e aceite em `docs/agents/TASKS.md`.
+3. Crie o worktree a partir da base que contém essa atribuição.
+4. Reserve os ativos binários antes de abrir o editor.
+5. Faça commits pequenos e valide o fluxo dentro do worktree da tarefa.
+6. Libere a reserva e entregue usando `docs/agents/HANDOFF_TEMPLATE.md`.
+7. Integre uma branch por vez via PR. Após cada merge, atualize a segunda
    branch e valide novamente no Unreal antes do merge final.
 
 Para Blueprints centrais como `BP_FirstPersonCharacter`, serialize o trabalho:

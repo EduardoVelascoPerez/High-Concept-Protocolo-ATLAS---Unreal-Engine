@@ -3,7 +3,9 @@
 Este repositório contém um protótipo **Unreal Engine 5.7**, orientado a
 Blueprints. O projeto fica em `ProtocoloATLAS/ProtocoloATLAS.uproject`.
 
-Antes de alterar qualquer coisa, leia `docs/PARALLEL_WORKFLOW.md`.
+Antes de alterar qualquer coisa, leia `docs/PARALLEL_WORKFLOW.md` e localize a
+sua atribuição em `docs/agents/TASKS.md`. Não execute tarefas que não estejam
+explicitamente atribuídas à sua branch.
 
 ## Regras obrigatórias
 
@@ -38,4 +40,5 @@ Antes de alterar qualquer coisa, leia `docs/PARALLEL_WORKFLOW.md`.
 ## Entrega de cada agente
 
 Informe branch, commits, arquivos alterados, testes executados, reservas ainda
-ativas e riscos conhecidos. Integração é feita por PR/cherry-pick após revisão.
+ativas e riscos conhecidos, seguindo `docs/agents/HANDOFF_TEMPLATE.md`.
+Integração é feita por PR/cherry-pick após revisão.
