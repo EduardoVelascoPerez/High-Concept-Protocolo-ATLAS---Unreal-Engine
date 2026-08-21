@@ -22,6 +22,7 @@ integração.
 | --- | --- | --- | --- | --- |
 | SGA-CLAUDE-001 | Claude Code | `claude/sga-next` | `PRONTA` | Auditoria técnica e backlog seguro do SGA |
 | SGA-CODEX-001 | Codex | `chore/ai-parallel-workflow` | `EM_REVISAO` | Infraestrutura de trabalho paralelo |
+| SGA-CODEX-002 | Codex | `codex/preflight-guardrails` | `PRONTA` | Guardrails locais contra commits inseguros |
 
 ---
 
@@ -109,6 +110,48 @@ Commit sugerido: `docs: auditar arquitetura e backlog do SGA`.
 Entregar worktrees isolados, reserva compartilhada de ativos, instruções
 automáticas para Claude Code e documentação operacional. Não inclui publicação,
 instalação do Claude Code, Git LFS ou limpeza do histórico.
+
+---
+
+## SGA-CODEX-002 — Guardrails de pré-voo
+
+**Responsável:** Codex
+
+**Branch:** `codex/preflight-guardrails`
+
+**Estado inicial:** `PRONTA`
+
+### Objetivo
+
+Criar uma verificação local, somente leitura, que agentes possam executar antes
+de commits para detectar branch incorreta, novos arquivos gerados do Unreal e
+alterações em ativos binários sem uma reserva visível.
+
+### Escopo permitido
+
+- Criar script em `scripts/` e documentação correspondente.
+- Atualizar `README.md`, `AGENTS.md`, `CLAUDE.md` e o fluxo paralelo.
+- Adicionar testes shell autocontidos em diretório temporário dentro do
+  worktree, removido ao final.
+- Atualizar apenas o estado desta tarefa neste arquivo.
+
+### Fora do escopo
+
+- Não editar nem remover ativos Unreal ou artefatos históricos rastreados.
+- Não instalar dependências, configurar hooks automaticamente ou reescrever o
+  histórico Git.
+- Não fazer merge em `main`.
+
+### Critérios de aceite
+
+- O comando falha em `main` e aceita branches `codex/*` ou `claude/*`.
+- O comando falha quando há mudanças staged/unstaged em diretórios gerados.
+- Alterações em `.uasset`, `.umap`, `.ubulk` ou `.uexp` sem reservas produzem
+  diagnóstico acionável e código de saída diferente de zero.
+- A execução limpa no worktree atual termina com sucesso.
+- Script validado com `bash -n` e cenários automatizados documentados.
+
+Commit sugerido: `chore: adicionar preflight para agentes`.
 
 ---
 
