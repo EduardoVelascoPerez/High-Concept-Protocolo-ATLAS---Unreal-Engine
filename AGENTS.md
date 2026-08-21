@@ -25,6 +25,8 @@ explicitamente atribuídas à sua branch.
   documentação/configuração com mudanças binárias de gameplay.
 - Não faça push, merge, rebase destrutivo, publicação ou instalação de
   dependências sem autorização explícita.
+- Antes de cada commit, execute `scripts/agent-preflight`. Corrija todos os
+  erros; não contorne o comando.
 
 ## Contexto técnico rápido
 

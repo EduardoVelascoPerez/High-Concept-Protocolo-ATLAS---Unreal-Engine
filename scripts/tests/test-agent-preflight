@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source_root="$(git rev-parse --show-toplevel)"
+preflight="$source_root/scripts/agent-preflight"
+asset_claim="$source_root/scripts/asset-claim"
+test_root="$(mktemp -d "$source_root/.preflight-test.XXXXXX")"
+trap 'rm -rf -- "$test_root"' EXIT
+
+new_case() {
+  local name="$1"
+  local case_dir="$test_root/$name"
+  mkdir -p "$case_dir/docs/agents"
+  git -C "$case_dir" init -q -b main
+  git -C "$case_dir" config user.name "Preflight Test"
+  git -C "$case_dir" config user.email "preflight@example.invalid"
+  printf '# Tasks\n\n| Branch |\n| --- |\n| `codex/test` |\n' > "$case_dir/docs/agents/TASKS.md"
+  git -C "$case_dir" add -- docs/agents/TASKS.md
+  git -C "$case_dir" commit -qm "test fixture"
+  printf '%s' "$case_dir"
+}
+
+expect_success() {
+  local label="$1"
+  shift
+  if "$@" >/dev/null 2>&1; then
+    echo "ok - $label"
+  else
+    echo "not ok - $label" >&2
+    exit 1
+  fi
+}
+
+expect_failure() {
+  local label="$1"
+  shift
+  if "$@" >/dev/null 2>&1; then
+    echo "not ok - $label" >&2
+    exit 1
+  else
+    echo "ok - $label"
+  fi
+}
+
+case_dir="$(new_case main-branch)"
+expect_failure "rejeita main" bash -c "cd \"$case_dir\" && \"$preflight\""
+
+case_dir="$(new_case clean-agent)"
+git -C "$case_dir" switch -qc codex/test
+expect_success "aceita worktree limpo de agente" bash -c "cd \"$case_dir\" && \"$preflight\""
+
+case_dir="$(new_case generated-staged)"
+git -C "$case_dir" switch -qc codex/test
+mkdir -p "$case_dir/Project/Saved"
+printf 'noise\n' > "$case_dir/Project/Saved/editor.log"
+git -C "$case_dir" add -f -- Project/Saved/editor.log
+expect_failure "rejeita arquivo gerado staged" bash -c "cd \"$case_dir\" && \"$preflight\""
+
+case_dir="$(new_case generated-unstaged)"
+git -C "$case_dir" switch -qc codex/test
+mkdir -p "$case_dir/Project/Intermediate"
+printf 'baseline\n' > "$case_dir/Project/Intermediate/cache.bin"
+git -C "$case_dir" add -f -- Project/Intermediate/cache.bin
+git -C "$case_dir" commit -qm "generated baseline"
+printf 'modified\n' >> "$case_dir/Project/Intermediate/cache.bin"
+expect_failure "rejeita arquivo gerado unstaged" bash -c "cd \"$case_dir\" && \"$preflight\""
+
+case_dir="$(new_case binary-without-claim)"
+git -C "$case_dir" switch -qc codex/test
+mkdir -p "$case_dir/Content"
+printf 'binary fixture\n' > "$case_dir/Content/Test.uasset"
+git -C "$case_dir" add -- Content/Test.uasset
+expect_failure "rejeita ativo sem reserva" bash -c "cd \"$case_dir\" && \"$preflight\""
+
+case_dir="$(new_case binary-with-claim)"
+git -C "$case_dir" switch -qc codex/test
+mkdir -p "$case_dir/Content"
+printf 'binary fixture\n' > "$case_dir/Content/Test.uasset"
+git -C "$case_dir" add -- Content/Test.uasset
+(cd "$case_dir" && "$asset_claim" claim codex Content/Test.uasset >/dev/null)
+expect_success "aceita ativo reservado pela branch" bash -c "cd \"$case_dir\" && \"$preflight\""
+(cd "$case_dir" && "$asset_claim" release codex >/dev/null)
+
+echo "Todos os cenários do preflight passaram."

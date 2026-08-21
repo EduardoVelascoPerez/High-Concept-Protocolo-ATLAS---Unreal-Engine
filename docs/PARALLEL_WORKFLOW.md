@@ -85,6 +85,17 @@ cada agente continua responsável por obedecê-la.
 7. Integre uma branch por vez via PR. Após cada merge, atualize a segunda
    branch e valide novamente no Unreal antes do merge final.
 
+Antes de cada commit, execute:
+
+```bash
+scripts/agent-preflight
+```
+
+O preflight rejeita trabalho direto em `main`, mudanças em diretórios gerados e
+ativos Unreal modificados sem uma reserva pertencente à branch atual. Os
+artefatos históricos já rastreados são contabilizados como baseline e só causam
+erro se forem modificados novamente.
+
 Para Blueprints centrais como `BP_FirstPersonCharacter`, serialize o trabalho:
 somente um agente altera o ativo; o outro pode pesquisar, documentar ou atuar em
 pastas independentes.

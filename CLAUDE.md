@@ -31,6 +31,7 @@ um conflito desses escolhendo um dos lados sem revisão humana no Unreal Editor.
 git status --short --branch
 scripts/asset-claim list
 sed -n '1,260p' docs/agents/TASKS.md
+scripts/agent-preflight
 ```
 
 Confirme que a branch começa com `claude/` e corresponde à tarefa. Antes de
@@ -50,6 +51,7 @@ branch própria.
 - Não abra/edite o mesmo projeto físico usado por outro agente; use seu worktree.
 - Ignore ruído de `Saved`, `Intermediate`, `DerivedDataCache` e `Binaries`.
 - Revise `git diff --stat` e `git status` antes de cada commit.
+- Execute `scripts/agent-preflight` imediatamente antes de cada commit.
 - Faça commits atômicos; não publique nem integre sem autorização.
 - Atualize apenas o status da sua própria tarefa em `docs/agents/TASKS.md`.
 - Preencha a entrega usando exatamente `docs/agents/HANDOFF_TEMPLATE.md`.

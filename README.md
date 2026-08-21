@@ -16,3 +16,6 @@ tarefa.
 As atribuições autorizadas e seus critérios de aceite ficam em
 [`docs/agents/TASKS.md`](docs/agents/TASKS.md). O `CLAUDE.md` importa essa fila
 automaticamente quando o Claude Code é iniciado na raiz do worktree.
+
+Antes de commits feitos por qualquer agente, rode `scripts/agent-preflight` para
+validar branch, tarefa, arquivos gerados e reservas de ativos Unreal.

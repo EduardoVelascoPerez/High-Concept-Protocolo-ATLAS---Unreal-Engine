@@ -22,7 +22,7 @@ integração.
 | --- | --- | --- | --- | --- |
 | SGA-CLAUDE-001 | Claude Code | `claude/sga-next` | `PRONTA` | Auditoria técnica e backlog seguro do SGA |
 | SGA-CODEX-001 | Codex | `chore/ai-parallel-workflow` | `EM_REVISAO` | Infraestrutura de trabalho paralelo |
-| SGA-CODEX-002 | Codex | `codex/preflight-guardrails` | `PRONTA` | Guardrails locais contra commits inseguros |
+| SGA-CODEX-002 | Codex | `codex/preflight-guardrails` | `EM_REVISAO` | Guardrails locais contra commits inseguros |
 
 ---
 
@@ -32,7 +32,7 @@ integração.
 
 **Branch:** `claude/sga-next`
 
-**Estado inicial:** `PRONTA`
+**Estado:** `EM_REVISAO`
 
 **Tipo:** somente documentação e inspeção de leitura
 
