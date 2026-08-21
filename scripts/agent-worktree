@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Uso:
+  scripts/agent-worktree create <claude|codex> <tarefa> [base]
+  scripts/agent-worktree list
+
+Exemplo:
+  scripts/agent-worktree create claude ui-hud
+EOF
+}
+
+repo_root="$(git rev-parse --show-toplevel)"
+command_name="${1:-}"
+
+case "$command_name" in
+  list)
+    git -C "$repo_root" worktree list
+    ;;
+  create)
+    agent="${2:-}"
+    task="${3:-}"
+    base="${4:-origin/main}"
+
+    if [[ "$agent" != "claude" && "$agent" != "codex" ]]; then
+      echo "Agente inválido: use 'claude' ou 'codex'." >&2
+      exit 2
+    fi
+    if [[ ! "$task" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
+      echo "Tarefa inválida: use letras minúsculas, números e hífens." >&2
+      exit 2
+    fi
+
+    branch="$agent/$task"
+    worktree_path="$repo_root/.worktrees/$agent-$task"
+
+    if git -C "$repo_root" show-ref --verify --quiet "refs/heads/$branch"; then
+      echo "A branch '$branch' já existe." >&2
+      exit 1
+    fi
+    if [[ -e "$worktree_path" ]]; then
+      echo "O caminho '$worktree_path' já existe." >&2
+      exit 1
+    fi
+    if ! git -C "$repo_root" rev-parse --verify --quiet "$base^{commit}" >/dev/null; then
+      echo "Base '$base' não encontrada. Execute 'git fetch origin' ou informe outra base." >&2
+      exit 1
+    fi
+
+    mkdir -p "$repo_root/.worktrees"
+    git -C "$repo_root" worktree add -b "$branch" "$worktree_path" "$base"
+    echo
+    echo "Worktree pronto: $worktree_path"
+    echo "Branch: $branch"
+    echo "Próximo passo: cd \"$worktree_path\""
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac

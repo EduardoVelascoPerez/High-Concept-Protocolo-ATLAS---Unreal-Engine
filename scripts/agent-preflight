@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+set -u
+
+repo_root="$(git rev-parse --show-toplevel 2>/dev/null)" || {
+  echo "ERRO: execute este comando dentro de um worktree Git." >&2
+  exit 2
+}
+common_dir="$(git rev-parse --path-format=absolute --git-common-dir)"
+claims_file="$common_dir/agent-coordination/claims.tsv"
+tasks_file="$repo_root/docs/agents/TASKS.md"
+branch="$(git -C "$repo_root" branch --show-current)"
+errors=0
+checked_paths=0
+
+error() {
+  echo "ERRO: $*" >&2
+  errors=$((errors + 1))
+}
+
+is_generated_path() {
+  case "$1" in
+    Saved/*|Intermediate/*|DerivedDataCache/*|Binaries/*|*/Saved/*|*/Intermediate/*|*/DerivedDataCache/*|*/Binaries/*)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+is_unreal_binary() {
+  case "$1" in
+    *.uasset|*.umap|*.ubulk|*.uexp)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+has_matching_claim() {
+  local path="$1"
+  [[ -s "$claims_file" ]] || return 1
+  awk -F '\t' -v branch="$branch" -v path="$path" '
+    $3 == branch && (path == $4 || index(path, $4 "/") == 1 || index($4, path "/") == 1) {
+      found = 1
+    }
+    END { exit(found ? 0 : 1) }
+  ' "$claims_file"
+}
+
+check_path() {
+  local path="$1"
+  checked_paths=$((checked_paths + 1))
+
+  if is_generated_path "$path"; then
+    error "arquivo gerado modificado: $path"
+  fi
+
+  if is_unreal_binary "$path" && ! has_matching_claim "$path"; then
+    error "ativo Unreal sem reserva para '$branch': $path"
+    echo "      reserve antes de editar: scripts/asset-claim claim ${branch%%/*} \"$path\"" >&2
+  fi
+}
+
+echo "Preflight de agentes"
+echo "  worktree: $repo_root"
+echo "  branch: ${branch:-<detached HEAD>}"
+
+case "$branch" in
+  codex/*|claude/*)
+    ;;
+  main)
+    error "a branch main é somente para integração; use um worktree de agente."
+    ;;
+  "")
+    error "HEAD destacado; use uma branch codex/* ou claude/*."
+    ;;
+  *)
+    error "branch não autorizada para execução: $branch"
+    ;;
+esac
+
+if [[ ! -f "$tasks_file" ]]; then
+  error "fila de tarefas ausente: docs/agents/TASKS.md"
+elif ! grep -Fq "\`$branch\`" "$tasks_file"; then
+  error "nenhuma tarefa atribuída à branch '$branch'."
+fi
+
+while IFS= read -r -d '' changed_path; do
+  check_path "$changed_path"
+done < <(
+  git -C "$repo_root" diff --name-only -z --diff-filter=ACMR
+  git -C "$repo_root" diff --cached --name-only -z --diff-filter=ACMR
+  git -C "$repo_root" ls-files --others --exclude-standard -z
+)
+
+tracked_generated_count="$(git -C "$repo_root" ls-files | awk '
+  /(^|\/)(Saved|Intermediate|DerivedDataCache|Binaries)\// { count++ }
+  END { print count + 0 }
+')"
+
+echo "  caminhos locais inspecionados: $checked_paths"
+echo "  artefatos históricos rastreados: $tracked_generated_count (baseline; não alterados)"
+
+if [[ "$errors" -gt 0 ]]; then
+  echo "Preflight reprovado com $errors erro(s)." >&2
+  exit 1
+fi
+
+echo "Preflight aprovado."

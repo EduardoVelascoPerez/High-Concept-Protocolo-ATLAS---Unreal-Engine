@@ -1,0 +1,9 @@
+# Ativos do Unreal são binários e não devem passar por merge textual.
+*.uasset binary
+*.umap binary
+*.ubulk binary
+*.uexp binary
+
+*.ini text eol=crlf
+*.md text eol=lf
+*.sh text eol=lf

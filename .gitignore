@@ -73,3 +73,16 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Worktrees locais para agentes (Codex/Claude Code)
+.worktrees/
+
+# Diretórios gerados do Unreal em qualquer nível do projeto
+**/Binaries/
+**/DerivedDataCache/
+**/Intermediate/
+**/Saved/
+
+# Estado local de ferramentas
+.claude/settings.local.json
+.DS_Store
