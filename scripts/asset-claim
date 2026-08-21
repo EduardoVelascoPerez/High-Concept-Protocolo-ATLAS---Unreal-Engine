@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Uso:
+  scripts/asset-claim list
+  scripts/asset-claim claim <agente> <caminho> [caminho...]
+  scripts/asset-claim release <agente> [caminho...]
+EOF
+}
+
+repo_root="$(git rev-parse --show-toplevel)"
+common_dir="$(git rev-parse --path-format=absolute --git-common-dir)"
+state_dir="$common_dir/agent-coordination"
+claims_file="$state_dir/claims.tsv"
+lock_dir="$state_dir/lock"
+command_name="${1:-}"
+
+mkdir -p "$state_dir"
+touch "$claims_file"
+
+acquire_lock() {
+  local attempt
+  for attempt in {1..50}; do
+    if mkdir "$lock_dir" 2>/dev/null; then
+      trap 'rmdir "$lock_dir" 2>/dev/null || true' EXIT
+      return
+    fi
+    sleep 0.1
+  done
+  echo "Não foi possível obter o bloqueio das reservas." >&2
+  exit 1
+}
+
+normalize_path() {
+  local value="${1#./}"
+  if [[ -z "$value" || "$value" == /* || "$value" == ".." || "$value" == ../* || "$value" == *$'\t'* || "$value" == *$'\n'* ]]; then
+    echo "Caminho inválido: $1" >&2
+    exit 2
+  fi
+  value="${value%/}"
+  printf '%s' "$value"
+}
+
+case "$command_name" in
+  list)
+    if [[ ! -s "$claims_file" ]]; then
+      echo "Nenhum ativo reservado."
+    else
+      printf 'DATA_UTC\tAGENTE\tBRANCH\tCAMINHO\n'
+      cat "$claims_file"
+    fi
+    ;;
+  claim)
+    agent="${2:-}"
+    shift 2 || true
+    if [[ -z "$agent" || "$#" -eq 0 ]]; then
+      usage >&2
+      exit 2
+    fi
+    branch="$(git -C "$repo_root" branch --show-current)"
+    acquire_lock
+    for raw_path in "$@"; do
+      requested="$(normalize_path "$raw_path")"
+      conflict="$(awk -F '\t' -v path="$requested" '
+        path == $4 || index(path, $4 "/") == 1 || index($4, path "/") == 1 { print; exit }
+      ' "$claims_file")"
+      if [[ -n "$conflict" ]]; then
+        echo "Reserva conflitante: $conflict" >&2
+        exit 1
+      fi
+      printf '%s\t%s\t%s\t%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$agent" "$branch" "$requested" >> "$claims_file"
+      echo "Reservado para $agent: $requested"
+    done
+    ;;
+  release)
+    agent="${2:-}"
+    shift 2 || true
+    if [[ -z "$agent" ]]; then
+      usage >&2
+      exit 2
+    fi
+    acquire_lock
+    temp_file="$state_dir/claims.$$.tmp"
+    if [[ "$#" -eq 0 ]]; then
+      awk -F '\t' -v agent="$agent" '$2 != agent' "$claims_file" > "$temp_file"
+      echo "Todas as reservas de '$agent' foram liberadas."
+    else
+      cp "$claims_file" "$temp_file"
+      for raw_path in "$@"; do
+        requested="$(normalize_path "$raw_path")"
+        next_file="$state_dir/claims.$$.next"
+        awk -F '\t' -v agent="$agent" -v path="$requested" '!($2 == agent && $4 == path)' "$temp_file" > "$next_file"
+        mv "$next_file" "$temp_file"
+        echo "Liberado para $agent: $requested"
+      done
+    fi
+    mv "$temp_file" "$claims_file"
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac

@@ -1,1 +1,14 @@
-# High-Concept-Protocolo-ATLAS---Unreal-Engine
+# SGA — Protocolo ATLAS
+
+Protótipo de jogo em Unreal Engine 5.7, desenvolvido principalmente com
+Blueprints. O projeto está em `ProtocoloATLAS/ProtocoloATLAS.uproject`.
+
+O estado atual inclui personagem e animações, interação com o módulo ATLAS,
+escudo do jogador, disparo, recarga e HUD.
+
+## Desenvolvimento com agentes
+
+O fluxo seguro para Codex e Claude Code trabalharem ao mesmo tempo usa branches,
+`git worktree` e reservas de ativos binários. Consulte
+[`docs/PARALLEL_WORKFLOW.md`](docs/PARALLEL_WORKFLOW.md) antes de iniciar uma
+tarefa.
